@@ -1,61 +1,66 @@
 //博客相关的方法
+const { execSQL } = require("../dataBase/mySql");
+
 const getList = (author, keyword) => {
-  //因为我没有数据库
-  //  所以返回一个假数据
-  return [
-    {
-      id: 1,
-      title: "zoe的标题1",
-      content: "内容1",
-      author: "zoe",
-      //t通过浏览器 Date.now 获取的
-      createAt: 1616305884315,
-    },
-    {
-      id: 2,
-      title: "zoe的标题2",
-      content: "内容22",
-      author: "zoe2",
-      //t通过浏览器 Date.now 获取的
-      createAt: 1616306011026,
-    },
-    {
-      id: 3,
-      title: "zoe的标题3",
-      content: "内容333",
-      author: "zoe2",
-      //t通过浏览器 Date.now 获取的
-      createAt: 1616306012006,
-    },
-  ];
+  //where 后面1=1 参数 容错处理
+  let sql = `select * from blogs where 1=1 `;
+  if (author) {
+    sql += `and author='${author}' `;
+  }
+  if (keyword) {
+    sql += ` and title like '%${keyword}%' `;
+  }
+  return execSQL(sql);
 };
 const getDetail = (id) => {
-  return {
-    id: 1,
-    title: "zoe的标题1",
-    content: "内容1",
-    author: "zoe",
-    //t通过浏览器 Date.now 获取的
-    createAt: 1616305884315,
-  };
+  const sql = `select * from blogs where id='${id}'`;
+  return execSQL(sql).then((rows) => {
+    // console.log('rows',rows)
+    return rows[0];
+  });
 };
 //创建新的博客
-const createNewBlog = (blogData) => {
-  console.log({ blogData });
-  return {
-    id: 1,
-  };
+const createNewBlog = (blogData = {}) => {
+  const title = blogData.title;
+  const content = blogData.content;
+  const author = blogData.author;
+  const createAt = Date.now();
+  const sql = `insert into blogs (title,content,author,createAt) values ('${title}','${content}','${author}','${createAt}')`;
+  return execSQL(sql).then((insertResult) => {
+    // console.log("insertResult", insertResult);
+    // insertResult 返回的是一个对象,对应的insertId 返回我们的id
+    return {
+      id: insertResult.insertId,
+    };
+  });
 };
 //更新博客
 const updateBlog = (id, blogData = {}) => {
-  console.log("id", id);
-  console.log("blogData", blogData);
-  return true;
+  // console.log("id", id);
+  // console.log("blogData", blogData);
+  // return true;
+  const title = blogData.title;
+  const content = blogData.content;
+  const sql = `update blogs set title='${title}', content='${content}' where id=${id}`;
+  return execSQL(sql).then((updateResult) => {
+    console.log({ updateResult });
+    // 此属性大于0 则更新成功为1
+    if (updateResult.affectedRows > 0) {
+      return true;
+    }
+    return false;
+  });
 };
 // 删除博客
-const deleteBlog = (id) => {
-  console.log("id", id);
-  return true;
+const deleteBlog = (id,author) => {
+  const sql =`delete from blogs where id=${id} and author='${author}'`
+  return execSQL(sql).then((deleteResult) => {
+    console.log({deleteResult})
+    if (deleteResult.affectedRows > 0) {
+      return true;
+    }
+    return false;
+  });
 };
 module.exports = {
   getList,

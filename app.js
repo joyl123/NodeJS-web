@@ -46,7 +46,9 @@ const serverHandler = (req, res) => {
     //博客相关的路由
     const blogData = handleBlogRoute(req, res);
     if (blogData) {
-      res.end(JSON.stringify(blogData));
+      blogData.then((blogData) => {
+        res.end(JSON.stringify(blogData));
+      });
       return;
     }
     //如果请求了 不存在的接口
