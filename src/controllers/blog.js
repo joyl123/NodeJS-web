@@ -40,14 +40,27 @@ const getDetail = (id) => {
   };
 };
 //创建新的博客
-const createNewBlog=(blogData)=>{
-console.log({blogData})
-return{
-  id:1
-}
-}
+const createNewBlog = (blogData) => {
+  console.log({ blogData });
+  return {
+    id: 1,
+  };
+};
+//更新博客
+const updateBlog = (id, blogData = {}) => {
+  console.log("id", id);
+  console.log("blogData", blogData);
+  return true;
+};
+// 删除博客
+const deleteBlog = (id) => {
+  console.log("id", id);
+  return true;
+};
 module.exports = {
   getList,
   getDetail,
   createNewBlog,
+  updateBlog,
+  deleteBlog,
 };
