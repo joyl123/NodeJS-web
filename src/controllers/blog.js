@@ -27,7 +27,6 @@ const createNewBlog = (blogData = {}) => {
   const createAt = Date.now();
   const sql = `insert into blogs (title,content,author,createAt) values ('${title}','${content}','${author}','${createAt}')`;
   return execSQL(sql).then((insertResult) => {
-    // console.log("insertResult", insertResult);
     // insertResult 返回的是一个对象,对应的insertId 返回我们的id
     return {
       id: insertResult.insertId,
@@ -36,9 +35,6 @@ const createNewBlog = (blogData = {}) => {
 };
 //更新博客
 const updateBlog = (id, blogData = {}) => {
-  // console.log("id", id);
-  // console.log("blogData", blogData);
-  // return true;
   const title = blogData.title;
   const content = blogData.content;
   const sql = `update blogs set title='${title}', content='${content}' where id=${id}`;
